@@ -1,5 +1,4 @@
 import sys, subprocess, errno # --STRIP DURING BUILD
-# pylint:disable=too-many-arguments,consider-using-with # noqa
 def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False,
                 env=None):
     """Call the given command(s)."""
@@ -14,7 +13,7 @@ def run_command(commands, args, cwd=None, verbose=False, hide_stderr=False,
                                        stderr=(subprocess.PIPE if hide_stderr
                                                else None))
             break
-        except EnvironmentError:
+        except OSError:
             e = sys.exc_info()[1]
             if e.errno == errno.ENOENT:
                 continue

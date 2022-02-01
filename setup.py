@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import os, base64, tempfile, io
-from os import path
 from pathlib import Path
 from setuptools import setup, Command
 from setuptools.command.build_py import build_py
@@ -10,7 +9,7 @@ from setuptools.dist import Distribution as _Distribution
 LONG = Path.read_text(Path(__file__).parent / "README.md")
 
 # as nice as it'd be to versioneer ourselves, that sounds messy.
-VERSION = "0.21.dev0"
+VERSION = "0.22.dev0"
 
 
 def ver(s):
@@ -32,11 +31,11 @@ def get(fn, add_ver=False, unquote=False, do_strip=False, do_readme=False):
     return text
 
 def get_vcs_list():
-    project_path = path.join(path.abspath(path.dirname(__file__)), 'src')
+    project_path = Path(__file__).absolute().parent / "src"
     return [filename
             for filename
-            in os.listdir(project_path)
-            if path.isdir(path.join(project_path, filename)) and filename != "__pycache__"]
+            in os.listdir(str(project_path))
+            if Path.is_dir(project_path / filename) and filename != "__pycache__"]
 
 def generate_long_version_py(VCS):
     s = io.StringIO()
@@ -86,19 +85,6 @@ class make_versioneer(Command):
         pass
     def run(self):
         with open("versioneer.py", "w") as f:
-            f.write("# pylint:disable=trailing-whitespace\n")
-            f.write("# pylint:disable=invalid-name\n")
-            f.write("# pylint:disable=import-outside-toplevel\n")
-            f.write("# pylint:disable=missing-function-docstring\n")
-            f.write("# pylint:disable=missing-class-docstring\n")
-            f.write("# pylint:disable=too-many-branches\n")
-            f.write("# pylint:disable=too-many-statements\n")
-            f.write("# pylint:disable=raise-missing-from\n")
-            f.write("# pylint:disable=too-many-lines\n")
-            f.write("# pylint:disable=too-many-locals\n")
-            f.write("# pylint:disable=too-few-public-methods\n")
-            f.write("# pylint:disable=import-error\n")
-            f.write("# pylint:disable=redefined-outer-name\n")
             f.write(generate_versioneer_py().decode("utf8"))
         return 0
 
