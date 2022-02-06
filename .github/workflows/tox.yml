@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - maint/*
+      - ci/windows
   pull_request:
     branches:
       - master
